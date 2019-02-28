@@ -57,9 +57,16 @@ For actors:<br />
 
 1.it not only show the information  of their own blockin  also show blocking of some actors who has position conflict and have related script. 
 2.easy to read and can play position dynamically
+
 #JSON
 get: Based on UI's parameters, it's necessary to have script , start date and end date.  Also we need a list of dictionary to record actor's position. Each part is a dict and all part combine a list. Since in actor.js we ask for actor's id and in directors.js we ask for actor's name. In order to keep all database connection  in backend. I also decided to have a actor and id table. This make front end  can find name  through ID.  I think two different route for both name and ID is a better Idea. However we cannot add route in this assignment.<br />
 post: Script num and  name-position array is good enough for this call. We can search file by script number and just change blocking in order. Because in director web we load information  ordered by  part number. So we don't need part number in this json. Also we can get script , start char and end char once we find the file. 
+
+
+
+
+
+
 #Enhancements
 Basically, I think Lighting designer is another work that is strongly connected to blocking.
 With this app they can tell their design and thoughts to stuffs and directors easily and stuffs can follow these instruction to put light.
