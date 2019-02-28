@@ -52,11 +52,34 @@ function getBlocking() {
 	// Get the script and actor numbers from the text box.
 	const scriptNumber = scriptNumText.value;
 	const actorNumber = actorText.value;
+
 	console.log(`Get blocking for script number ${scriptNumber} for actor ${actorNumber}`)
 
 	/* Add code below to get JSON from the server and display it appropriately. */
+    const url = '/script/'+scriptNumber.toString();
+    console.log(url)
+    // A 'fetch' AJAX call to the server.
+    fetch(url)
+        .then((res) => {
+            //// Do not write any code here
+            return res.json()
+            //// Do not write any code here
+        })
+        .then((jsonResult) => {
+            // This is where the JSON result (jsonResult) from the server can be accessed and used.
+            console.log('Result:', jsonResult)
+            // Use the JSON to add a script part
+            for (var i = 0; i < jsonResult.start_char.length; i++) {
+                if(jsonResult.actor_postion[i][actorNumber] == 'undefined'){
+                    addScriptPart(jsonResult.script_text, jsonResult.start_char[i], jsonResult.end_char[i],jsonResult.actor_postion[i][actorNumber] )
+                }
 
-
+                addScriptPart(jsonResult.script_text, jsonResult.start_char[i], jsonResult.end_char[i],jsonResult.actor_postion[i][actorNumber] )
+            }
+        }).catch((error) => {
+        // if an error occured it will be logged to the JavaScript console here.
+        console.log("An error occured with fetch:", error)
+    })
 
 
 
