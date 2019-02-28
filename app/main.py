@@ -34,7 +34,52 @@ parse the text files and send the correct JSON.'''
 @app.route('/script/<int:script_id>')
 def script(script_id):
     # right now, just sends the script id in the URL
-    return jsonify(script_id)
+    #get  "actor:id" dicton
+    actor_num={}
+    send={}
+    fcsv=open("app/actors.csv")
+    a1=fcsv.readlines()
+    for csvline in  a1:
+        newcsvline=csvline.strip("\n").split(",")
+        actor_num[ newcsvline[1]] =  newcsvline[0]
+        send[ newcsvline[0]] =  newcsvline[1]
+    af=[]
+    scriptline=''
+    start_char_list=[]
+    end_char_list=[]
+    actor=[]    
+    for root, dirs, files in os.walk("app/script_data"):
+        for filename in files:
+            af.append(filename)
+    for fn in af:
+        f = open("app/script_data/"+fn)
+        id=f.readline()
+        #check script id
+        if int(id)==script_id:
+            #read rest of file
+            content=f.readlines()
+            scriptline=content[1].strip('\n')#get script
+            for line in content[3:]:
+                a=line.split('. ')#split by "." to delete part number
+                b=a[1].strip('\n').split(', ')#delete newline character and split by ","
+                start_char_list.append(b[0])
+                end_char_list.append(b[1])
+                #dict of actors-position of one part
+                thisdict={}
+                for ap in b[2:]:
+                    c=ap.split('-')
+                    actorid=actor_num.get(c[0])
+                    thisdict[actorid]=c[1]
+                actor.append(thisdict)
+                
+                
+    script_get_data={"script_text":scriptline,
+                     "start_char":start_char_list,
+                     "end_char": end_char_list,
+                     "actor_postion":actor,
+                     "actor_table":send
+                     }    
+    return jsonify(script_get_data)
 
 
 ## POST route for replacing script blocking on server
@@ -44,7 +89,24 @@ def script(script_id):
 @app.route('/script', methods=['POST'])
 def addBlocking():
     # right now, just sends the original request json
-    return jsonify(request.json)
+    scriptnum=request.form['scriptNum']
+    blocking=request.form['blocking']
+    script=request.form['script']
+    for root, dirs, files in os.walk("app/script_data"):
+        for filename in files:
+            af.append(filename)
+    for fn in af:
+        f = open("app/script_data/"+fn,'rw')
+        id=f.readline()
+        #check script id
+        if int(id)==script_id:
+            f.write(scriptnum+'\n')
+            f.write('\n')
+            f.write(script+'\n')
+            f.write('\n')
+            
+            
+    #return jsonify(request.json)
 
 
 
