@@ -1,0 +1,25 @@
+{
+  "actor_postion": [
+    {
+      "1": "5",
+      "2": "2"
+    },
+    {
+      "1": "0",
+      "2": "3"
+    }
+  ],
+  "actor_table": {
+    "1": "Hamlet",
+    "2": "Claudius"
+  },
+  "end_char": [
+    "31",
+    "58"
+  ],
+  "script_text": "That's it Claudius, I'm leaving!Fine! Oh..he left already..",
+  "start_char": [
+    "0",
+    "32"
+  ]
+}
