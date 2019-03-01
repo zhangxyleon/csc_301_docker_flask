@@ -11,20 +11,20 @@ CORS(app)
    # parse the text files in script_data to create these objects - do not send the text
    # files to the client! The server should only send structured data in the sallest format necessary.
 scripts = []
-parse(script)
-def parse(script):
+def parse():
+    scripts = []
     af=[]
-    scriptline=''
-    start_char_list=[]
-    end_char_list=[]
-    actor=[]    
+    scriptline='' 
     for root, dirs, files in os.walk("app/script_data"):
         for filename in files:
             af.append(filename)
     for fn in af:
         f = open("app/script_data/"+fn)
-        id=f.readline()
-      
+        id=f.readline().strip('\n')
+        start_char_list=[]
+        end_char_list=[]
+        actor=[]           
+
         #read rest of file
         content=f.readlines()
         scriptline=content[1].strip('\n')#get script
@@ -42,13 +42,15 @@ def parse(script):
         script_get_data={"script_text":scriptline,
                          "start_char":start_char_list,
                          "end_char": end_char_list,
-                         "actor_postion":actor,}
+                         "actor_position":actor,}
         
         
         scriptdict={}
         scriptdict[id]=script_get_data
         scripts.append(scriptdict)
-
+        #print(scripts)
+    return scripts
+scripts=parse()
 ### DO NOT modify this route ###
 @app.route('/')
 def hello_world():
@@ -73,15 +75,15 @@ def script(script_id):
     # right now, just sends the script id in the URL
     #get  "actor:id" dicton
     send={}
+    script_get_data=scripts
     fcsv=open("app/actors.csv")
     a1=fcsv.readlines()
     for csvline in  a1:
         newcsvline=csvline.strip("\n").split(",")
         send[ newcsvline[0]] =  newcsvline[1]
     for ap in scripts:
-        if ap==str(script_id):
-            script_get_data=ap
-                
+        if ap.get(str(script_id))!=None:
+            script_get_data=ap.get(str(script_id))      
     #send a script and actor_number table         
     script_get_data['actor_table']=send
     return jsonify(script_get_data)
@@ -94,16 +96,31 @@ def script(script_id):
 @app.route('/script', methods=['POST'])
 def addBlocking():
     # right now, just sends the original request json
-    scriptnum=request.form['scriptNum']
-    blocking=request.form['blocking']
+    data=request.json
+    script_id=data['scriptNum']
     for ap in scripts:
-        if ap== str(scriptnum):
+        if ap.get(str(script_id))!=None:
             index=scripts.index(ap)
-    scripts[index]['actor_position']=blocking        
+    scripts[index][str(script_id)]['actor_position']=data['blocking']            
             
-            
-    return jsonify(request.json)
+    return jsonify(scripts)
 
+#prototype of light blocking server call
+@app.route('/script/<int:script_id>')
+def light_script(script_id):
+    #get data from database called 'light_blocking_data'
+
+    light_scripts=light_blocking_data[script_id]
+
+    return jsonify(light_scripts)
+@app.route('/script', methods=['POST'])
+def addlightBlocking():
+    #get data from database called 'light_blocking_data'    
+    # this call will get script number and new blocking from frontend
+    data=request.json
+    light_blocking_data['scriptNum']['light_position']=data['new_blocking']
+    
+ 
 
 
 if __name__ == "__main__":
