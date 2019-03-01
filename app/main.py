@@ -11,6 +11,43 @@ CORS(app)
    # parse the text files in script_data to create these objects - do not send the text
    # files to the client! The server should only send structured data in the sallest format necessary.
 scripts = []
+parse(script)
+def parse(script):
+    af=[]
+    scriptline=''
+    start_char_list=[]
+    end_char_list=[]
+    actor=[]    
+    for root, dirs, files in os.walk("app/script_data"):
+        for filename in files:
+            af.append(filename)
+    for fn in af:
+        f = open("app/script_data/"+fn)
+        id=f.readline()
+      
+        #read rest of file
+        content=f.readlines()
+        scriptline=content[1].strip('\n')#get script
+        for line in content[3:]:
+            a=line.split('. ')#split by "." to delete part number
+            b=a[1].strip('\n').split(', ')#delete newline character and split by ","
+            start_char_list.append(b[0])
+            end_char_list.append(b[1])
+        #dict of actors-position of one part
+            thisdict={}
+            for ap in b[2:]:
+                c=ap.split('-')
+                thisdict[c[0]]=c[1]
+            actor.append(thisdict)
+        script_get_data={"script_text":scriptline,
+                         "start_char":start_char_list,
+                         "end_char": end_char_list,
+                         "actor_postion":actor,}
+        
+        
+        scriptdict={}
+        scriptdict[id]=script_get_data
+        scripts.append(scriptdict)
 
 ### DO NOT modify this route ###
 @app.route('/')
@@ -20,7 +57,7 @@ def hello_world():
 ### DO NOT modify this example route. ###
 @app.route('/example')
 def example_block():
-    example_script = "O Romeo, Romeo, wherefore art thou Romeo? Deny thy father and refuse thy name. Or if thou wilt not, be but sworn my love And I’ll no longer be a Capulet."
+    example_script = "O Romeo, Romeo, wherefore art thou Romeo? Deny th6y father and refuse thy name. Or if thou wilt not, be but sworn my love And I’ll no longer be a Capulet."
 
     # This example block is inside a list - not in a dictionary with keys, which is what
     # we want when sending a JSON object with multiple pieces of data.
@@ -35,50 +72,18 @@ parse the text files and send the correct JSON.'''
 def script(script_id):
     # right now, just sends the script id in the URL
     #get  "actor:id" dicton
-    actor_num={}
     send={}
     fcsv=open("app/actors.csv")
     a1=fcsv.readlines()
     for csvline in  a1:
         newcsvline=csvline.strip("\n").split(",")
-        actor_num[ newcsvline[1]] =  newcsvline[0]
         send[ newcsvline[0]] =  newcsvline[1]
-    af=[]
-    scriptline=''
-    start_char_list=[]
-    end_char_list=[]
-    actor=[]    
-    for root, dirs, files in os.walk("app/script_data"):
-        for filename in files:
-            af.append(filename)
-    for fn in af:
-        f = open("app/script_data/"+fn)
-        id=f.readline()
-        #check script id
-        if int(id)==script_id:
-            #read rest of file
-            content=f.readlines()
-            scriptline=content[1].strip('\n')#get script
-            for line in content[3:]:
-                a=line.split('. ')#split by "." to delete part number
-                b=a[1].strip('\n').split(', ')#delete newline character and split by ","
-                start_char_list.append(b[0])
-                end_char_list.append(b[1])
-                #dict of actors-position of one part
-                thisdict={}
-                for ap in b[2:]:
-                    c=ap.split('-')
-                    actorid=actor_num.get(c[0])
-                    thisdict[actorid]=c[1]
-                actor.append(thisdict)
+    for ap in scripts:
+        if ap==str(script_id):
+            script_get_data=ap
                 
-                
-    script_get_data={"script_text":scriptline,
-                     "start_char":start_char_list,
-                     "end_char": end_char_list,
-                     "actor_postion":actor,
-                     "actor_table":send
-                     }    
+    #send a script and actor_number table         
+    script_get_data['actor_table']=send
     return jsonify(script_get_data)
 
 
@@ -91,22 +96,13 @@ def addBlocking():
     # right now, just sends the original request json
     scriptnum=request.form['scriptNum']
     blocking=request.form['blocking']
-    script=request.form['script']
-    for root, dirs, files in os.walk("app/script_data"):
-        for filename in files:
-            af.append(filename)
-    for fn in af:
-        f = open("app/script_data/"+fn,'rw')
-        id=f.readline()
-        #check script id
-        if int(id)==script_id:
-            f.write(scriptnum+'\n')
-            f.write('\n')
-            f.write(script+'\n')
-            f.write('\n')
+    for ap in scripts:
+        if ap== str(scriptnum):
+            index=scripts.index(ap)
+    scripts[index]['actor_position']=blocking        
             
             
-    #return jsonify(request.json)
+    return jsonify(request.json)
 
 
 
