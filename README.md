@@ -31,7 +31,7 @@ To stop/remove container:
 # objective statement
 1.	Actors will get blocking information from this web app so that they can check their blocking information clearly and prepare for rehearsal anytime and anywhere.
 2.	Directors can show actors blocking directly and clearly. Also they can modify information easily in order to give actors information before rehearsal.
-3.	Actors and directors will share blocking information easily. This web app can improve rehearsal efficiency significantly.
+3.	Actors and directors will share blocking information easily. This web app can improve rehearsal efficiency significantly. <br />
 #personas
 1.  Paul the Director  <br />
     Age: 40 <br />
@@ -49,18 +49,17 @@ To stop/remove container:
 3. As a experienced  actor, I hope this web app  can help me get blocking information before rehearsal. It will save me a lot of time. Since I am very familiar with stage, A clear blocking will help me complete rehearsal faster.
 
 #acceptance criteria
- For directos:
-1. only directors can modify the blocking. For each blocking move, it can script and time to make sure the blocking's accuracy.<br />
-             
+For directos:
+1. only directors can modify the blocking. For each blocking move, it can use script and time to make sure the blocking's accuracy.<br />        
 2. It must be easy to used in  smart phones or tablet. So directors can put on new information everywhere. It must be updated in time.<br />
 For actors:<br />
 
-1.it not only show the information  of their own blockin  also show blocking of some actors who has position conflict and have related script. 
+1.it not only show the information  of their own blocking  also show blocking of some actors who has position conflict and have related script.<br />
 2.easy to read and can play position dynamically
 
 #JSON
 get: Based on UI's parameters, it's necessary to have script , start date and end date.  Also we need a list of dictionary to record actor's position. Each part is a dict and all part combine a list. Since in actor.js we ask for actor's id and in directors.js we ask for actor's name. In order to keep all database connection  in backend. I also decided to have a actor and id table. This make front end  can find name  through ID.  I think two different route for both name and ID is a better Idea. However we cannot add route in this assignment.<br />
-post: Script num and  name-position array is good enough for this call. We can search file by script number and just change blocking in order. Because in director web we load information  ordered by  part number. So we don't need part number in this json. Also we can get script , start char and end char once we find the file. 
+post: Script num and  a array of blocking assign( blocking for each part is a dict) is good enough for this call. We can search file by script number and just change blocking in order. Because in director web we load information  ordered by  part number. So we don't need part number in this json. Also we can get script , start char and end char once we find the file. 
 
 
 
@@ -68,10 +67,11 @@ post: Script num and  name-position array is good enough for this call. We can s
 
 
 #Enhancements
-Basically, I think Lighting designer is another work that is strongly connected to blocking.
+Thoughts：Basically, I think Lighting designer is another work that is strongly connected to blocking.
 With this app they can tell their design and thoughts to stuffs and directors easily and stuffs can follow these instruction to put light.
 Just some modifies of this web app can make it a great light blocking app. 
-actors change to different kind of light. Lighting designer can assign these light into blocks with accrate time. Everything can be show directly and dynamically.
+actors change to different kind of light. Lighting designer can assign these light into blocks with accrate time. Everything can be show directly and dynamically.<br />
+implement：I provide a example of JSON used for light blocking of one script.In 'main.py', there are prototypes of  a get call and a post call for light blocking. 
 
 #link
 https://zhan2158xy.herokuapp.com/actor.html

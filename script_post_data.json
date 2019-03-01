@@ -1,9 +1,13 @@
-{
-  "blocking": [
-    [
-      ["H",5],
-      ["a",3]
-    ]
+{"scriptNum":1,
+    "blocking":[
+      {
+      "Claudius": "2",
+      "Hamlet": "4"
+      },
+      {
+      "Claudius": "3",
+      "Hamlet": "0"
+      }
   ],
-  "scriptNum": 1
 }
+

@@ -1,0 +1,20 @@
+{
+  "light_postion": [
+    {
+      "white_light": "2",
+      "red_light": "5"
+    },
+    {
+      "blue_light": "3",
+    }
+  ],
+  "end_char": [
+    "31",
+    "58"
+  ],
+  "script_text": "That's it Claudius, I'm leaving!Fine! Oh..he left already..",
+  "start_char": [
+    "0",
+    "32"
+  ]
+}
