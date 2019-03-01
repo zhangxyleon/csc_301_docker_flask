@@ -70,11 +70,7 @@ function getBlocking() {
             console.log('Result:', jsonResult)
             // Use the JSON to add a script part
             for (var i = 0; i < jsonResult.start_char.length; i++) {
-                if(jsonResult.actor_postion[i][actorNumber] == 'undefined'){
-                    addScriptPart(jsonResult.script_text, jsonResult.start_char[i], jsonResult.end_char[i],jsonResult.actor_postion[i][actorNumber] )
-                }
-
-                addScriptPart(jsonResult.script_text, jsonResult.start_char[i], jsonResult.end_char[i],jsonResult.actor_postion[i][actorNumber] )
+                addScriptPart(jsonResult.script_text, jsonResult.start_char[i], jsonResult.end_char[i],jsonResult.actor_position[i][jsonResult.actor_table[actorNumber]] )
             }
         }).catch((error) => {
         // if an error occured it will be logged to the JavaScript console here.

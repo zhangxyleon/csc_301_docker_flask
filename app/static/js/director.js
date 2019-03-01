@@ -37,6 +37,7 @@ function getBlockingDetailsOnScreen() {
 function setScriptNumber(num) {
 	const scriptNum = document.querySelector('#scriptNum')
 	scriptNum.innerHTML = `${num}`
+    console.log('update success')
 }
 
 function getScriptNumber(num) {
@@ -82,6 +83,7 @@ console.log(getBlockingDetailsOnScreen())
 
 function getBlocking() {
 	const scriptNumber = scriptNumText.value;
+    removeAllBlocks()
 	setScriptNumber(scriptNumber)
 	console.log(`Get blocking for script number ${scriptNumber}`)
 
@@ -102,18 +104,17 @@ function getBlocking() {
             // This is where the JSON result (jsonResult) from the server can be accessed and used.
             console.log('Result:', jsonResult)
             // Use the JSON to add a script part
-            removeAllBlocks()
             for (var i = 0; i < jsonResult.start_char.length; i++) {
                 var namelist= []
                 var poslist= []
-                console.log(jsonResult.actor_postion[i])
-                var a=Object.keys(jsonResult.actor_postion[i])
+                var a=Object.keys(jsonResult.actor_position[i])
+                console.log(a)
                 var result=jsonResult
                 for(var j = 0; j < a.length; j++){
                     //console.log(result.actor_table[a[j]])
-                    namelist.push(result.actor_table[a[j]])
-                    //console.log(result.actor_postion[i][a[j]])
-                    poslist.push(result.actor_postion[i][a[j]])
+                    namelist.push(a[j])
+                    console.log(result.actor_position[i][a[j]])
+                    poslist.push(result.actor_position[i][a[j]])
                 }
                 //console.log(namelist)
                 //console.log(poslist)
@@ -134,25 +135,32 @@ function changeScript() {
 	const url = '/script';
     var detail=getBlockingDetailsOnScreen()
     var  blocking=[]
-    var script=''
+
     for(var i=0;i<detail.length;i++) {
-        console.log(detail[i].actors)
-        blocking.push(detail[i].actors)
-        console.log(detail[i]["text"])
-        script=script.concat(detail[i]["text"])
+        //console.log(detail[i].actors)
+        var part = {}
+        for (var j = 0; j < detail[i]['actors'].length; j++) {
+            //console.log(detail[i]['actors'][j])
+            part[detail[i]['actors'][j][0]]=detail[i]['actors'][j][1]
+            //console.log(part)
+        }
+        blocking.push(part)
+
+        //console.log(detail[i]["text"])
+        //script=script.concat(detail[i]["text"])
     }
-    console.log(blocking)
-    console.log(script)
+    //console.log(blocking)
+
+    //console.log(script)
     // The data we are going to send in our request
     // It is a Javascript Object that will be converted to JSON
     let data = {
     	scriptNum: getScriptNumber(),
     	// What else do you need to send to the server?
-        script  : script,
         blocking: blocking
 
     }
-
+    //console.log(data)
     // Create the request constructor with all the parameters we need
     const request = new Request(url, {
         method: 'post', 
